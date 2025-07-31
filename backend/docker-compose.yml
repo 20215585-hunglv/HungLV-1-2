@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb-data:/data/db  
+
+  backend:
+    build: .
+    container_name: backend-app
+    ports:
+      - "3800:3800"
+    depends_on:
+      - mongo
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/t2
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
+
+volumes:
+  mongodb-data:
